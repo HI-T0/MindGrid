@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Organizer</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --background-color: #f0f4f8;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            list-style-type: none;
+            margin-bottom: 30px;
+        }
+
+        nav ul li {
+            margin: 5px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        main section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        main section.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3a7bc8;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn, .edit-btn {
+            padding: 5px 10px;
+            margin-left: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin: 5px 0;
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            input[type="text"], input[type="number"], input[type="date"], textarea, select, button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Life Organizer</h1>
+            <p>Manage your life, all in one place</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#todo" class="active">To-Do List</a></li>
+                <li><a href="#habits">Habit Tracker</a></li>
+                <li><a href="#recipes">Recipe Book</a></li>
+                <li><a href="#expenses">Expense Tracker</a></li>
+                <li><a href="#flashcards">Flashcards</a></li>
+                <li><a href="#meditation">Meditation Timer</a></li>
+                <li><a href="#fitness">Fitness Challenge</a></li>
+                <li><a href="#journal">Personal Journal</a></li>
+                <li><a href="#scrapbook">Scrapbooking</a></li>
+                <li><a href="#quizzes">Quizzes</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="todo" class="active">
+                <h2>To-Do List</h2>
+                <form id="todo-form">
+                    <input type="text" id="todo-title" placeholder="Task title" required>
+                    <input type="date" id="todo-date" required>
+                    <select id="todo-priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button type="submit">Add Task</button>
+                </form>
+                <ul id="todo-list"></ul>
+            </section>
+
+            <section id="habits">
+                <h2>Habit Tracker</h2>
+                <form id="habit-form">
+                    <input type="text" id="habit-name" placeholder="Habit name" required>
+                    <select id="habit-frequency">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                    </select>
+                    <button type="submit">Add Habit</button>
+                </form>
+                <ul id="habit-list"></ul>
+            </section>
+
+            <section id="recipes">
+                <h2>Recipe Book</h2>
+                <form id="recipe-form">
+                    <input type="text" id="recipe-name" placeholder="Recipe name" required>
+                    <textarea id="recipe-ingredients" placeholder="Ingredients (one per line)" required></textarea>
+                    <textarea id="recipe-instructions" placeholder="Instructions" required></textarea>
+                    <button type="submit">Add Recipe</button>
+                </form>
+                <ul id="recipe-list"></ul>
+            </section>
+
+            <section id="expenses">
+                <h2>Expense Tracker</h2>
+                <form id="expense-form">
+                    <input type="number" id="expense-amount" placeholder="Amount" required>
+                    <input type="text" id="expense-category" placeholder="Category" required>
+                    <input type="text" id="expense-description" placeholder="Description" required>
+                    <button type="submit">Add Expense</button>
+                </form>
+                <ul id="expense-list"></ul>
+            </section>
+
+            <section id="flashcards">
+                <h2>Flashcards</h2>
+                <form id="flashcard-form">
+                    <input type="text" id="flashcard-question" placeholder="Question" required>
+                    <input type="text" id="flashcard-answer" placeholder="Answer" required>
+                    <button type="submit">Add Flashcard</button>
+                </form>
+                <div id="flashcard-display"></div>
+                <ul id="flashcard-list"></ul>
+            </section>
+
+            <section id="meditation">
+                <h2>Meditation Timer</h2>
+                <form id="meditation-form">
+                    <input type="number" id="meditation-duration" placeholder="Duration (minutes)" required>
+                    <select id="meditation-sound">
+                        <option value="bell">Bell</option>
+                        <option value="nature">Nature</option>
+                        <option value="ocean">Ocean</option>
+                    </select>
+                    <button type="submit">Start Meditation</button>
+                </form>
+                <div id="meditation-timer"></div>
+            </section>
+
+            <section id="fitness">
+                <h2>Fitness Challenge</h2>
+                <form id="fitness-form">
+                    <input type="text" id="fitness-activity" placeholder="Activity" required>
+                    <input type="number" id="fitness-duration" placeholder="Duration (minutes)" required>
+                    <input type="number" id="fitness-reps" placeholder="Repetitions (if applicable)">
+                    <button type="submit">Log Workout</button>
+                </form>
+                <ul id="fitness-list"></ul>
+            </section>
+
+            <section id="journal">
+                <h2>Personal Journal</h2>
+                <form id="journal-form">
+                    <textarea id="journal-entry" placeholder="Write your thoughts..." required></textarea>
+                    <input type="text" id="journal-tags" placeholder="Tags (comma-separated)">
+                    <button type="submit">Save Entry</button>
+                </form>
+                <ul id="journal-list"></ul>
+            </section>
+
+            <section id="scrapbook">
+                <h2>Scrapbooking</h2>
+                <form id="scrapbook-form">
+                    <input type="text" id="scrapbook-title" placeholder="Page Title" required>
+                    <textarea id="scrapbook-content" placeholder="Add your memories..." required></textarea>
+                    <button type="submit">Create Page</button>
+                </form>
+                <div id="scrapbook-pages"></div>
+            </section>
+
+            <section id="quizzes">
+                <h2>Quizzes</h2>
+                <div id="quiz-selection">
+                    <button id="start-quiz">Start Quiz</button>
+                </div>
+                <div id="quiz-container" style="display: none;">
+                    <h3 id="quiz-question"></h3>
+                    <div id="quiz-options"></div>
+                    <button id="submit-answer">Submit Answer</button>
+                </div>
+                <div id="quiz-results" style="display: none;"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('main section');
+
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    sections.forEach(s => s.classList.remove('active'));
+                    document.querySelector(link.getAttribute('href')).classList.add('active');
+                });
+            });
+
+            // To-Do List
+            const todoForm = document.getElementById('todo-form');
+            const todoList = document.getElementById('todo-list');
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+            function renderTodos() {
+                todoList.innerHTML = '';
+                todos.forEach((todo, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="${todo.completed ? 'completed' : ''}">${todo.title} - Due: ${todo.date} (Priority: ${todo.priority})</span>
+                        <div>
+                            <button class="edit-btn" data-index="${index}">Edit</button>
+                            <button class="delete-btn" data-index="${index}">Delete</button>
+                            <input type="checkbox" ${todo.completed ? 'checked' : ''} data-index="${index}">
+                        </div>
+                    `;
+                    todoList.appendChild(li);
+                });
+            }
+
+            todoForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('todo-title').value;
+                const date = document.getElementById('todo-date').value;
+                const priority = document.getElementById('todo-priority').value;
+                todos.push({ title, date, priority, completed: false });
+                localStorage.setItem('todos', JSON.stringify(todos));
+                renderTodos();
+                todoForm.reset();
+            });
+
+            todoList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    todos.splice(index, 1);
+                    localStorage.setItem('todos', JSON.stringify(todos));
+                    renderTodos();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const todo = todos[index];
+                    document.getElementById('todo-title').value = todo.title;
+                    document.getElementById('todo-date').value = todo.date;
+                    document.getElementById('todo-priority').value = todo.priority;
+                    todos.splice(index, 1);
+                    localStorage.setItem('todos', JSON.stringify(todos));
+                    renderTodos();
+                } else if (e.target.type === 'checkbox') {
+                    const index = e.target.getAttribute('data-index');
+                    todos[index].completed = e.target.checked;
+                    localStorage.setItem('todos', JSON.stringify(todos));
+                    renderTodos();
+                }
+            });
+
+            renderTodos();
+
+            // Habit Tracker
+            const habitForm = document.getElementById('habit-form');
+            const habitList = document.getElementById('habit-list');
+            let habits = JSON.parse(localStorage.getItem('habits')) || [];
+
+            function renderHabits() {
+                habitList.innerHTML = '';
+                habits.forEach((habit, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${habit.name} (${habit.frequency})</span>
+                        <div>
+                            <button class="edit-btn" data-index="${index}">Edit</button>
+                            <button class="delete-btn" data-index="${index}">Delete</button>
+                            <input type="checkbox" ${habit.completed ? 'checked' : ''} data-index="${index}">
+                        </div>
+                    `;
+                    habitList.appendChild(li);
+                });
+            }
+
+            habitForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('habit-name').value;
+                const frequency = document.getElementById('habit-frequency').value;
+                habits.push({ name, frequency, completed: false });
+                localStorage.setItem('habits', JSON.stringify(habits));
+                renderHabits();
+                habitForm.reset();
+            });
+
+            habitList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    habits.splice(index, 1);
+                    localStorage.setItem('habits', JSON.stringify(habits));
+                    renderHabits();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const habit = habits[index];
+                    document.getElementById('habit-name').value = habit.name;
+                    document.getElementById('habit-frequency').value = habit.frequency;
+                    habits.splice(index, 1);
+                    localStorage.setItem('habits', JSON.stringify(habits));
+                    renderHabits();
+                } else if (e.target.type === 'checkbox') {
+                    const index = e.target.getAttribute('data-index');
+                    habits[index].completed = e.target.checked;
+                    localStorage.setItem('habits', JSON.stringify(habits));
+                    renderHabits();
+                }
+            });
+
+            renderHabits();
+
+            // Recipe Book
+            const recipeForm = document.getElementById('recipe-form');
+            const recipeList = document.getElementById('recipe-list');
+            let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+
+            function renderRecipes() {
+                recipeList.innerHTML = '';
+                recipes.forEach((recipe, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <h3>${recipe.name}</h3>
+                        <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                        <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+                        <button class="edit-btn" data-index="${index}">Edit</button>
+                        <button class="delete-btn" data-index="${index}">Delete</button>
+                    `;
+                    recipeList.appendChild(li);
+                });
+            }
+
+            recipeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('recipe-name').value;
+                const ingredients = document.getElementById('recipe-ingredients').value;
+                const instructions = document.getElementById('recipe-instructions').value;
+                recipes.push({ name, ingredients, instructions });
+                localStorage.setItem('recipes', JSON.stringify(recipes));
+                renderRecipes();
+                recipeForm.reset();
+            });
+
+            recipeList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    recipes.splice(index, 1);
+                    localStorage.setItem('recipes', JSON.stringify(recipes));
+                    renderRecipes();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const recipe = recipes[index];
+                    document.getElementById('recipe-name').value = recipe.name;
+                    document.getElementById('recipe-ingredients').value = recipe.ingredients;
+                    document.getElementById('recipe-instructions').value = recipe.instructions;
+                    recipes.splice(index, 1);
+                    localStorage.setItem('recipes', JSON.stringify(recipes));
+                    renderRecipes();
+                }
+            });
+
+            renderRecipes();
+
+            // Expense Tracker
+            const expenseForm = document.getElementById('expense-form');
+            const expenseList = document.getElementById('expense-list');
+            let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+            function renderExpenses() {
+                expenseList.innerHTML = '';
+                expenses.forEach((expense, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${expense.amount} - ${expense.category} (${expense.description})</span>
+                        <div>
+                            <button class="edit-btn" data-index="${index}">Edit</button>
+                            <button class="delete-btn" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    expenseList.appendChild(li);
+                });
+            }
+
+            expenseForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const amount = document.getElementById('expense-amount').value;
+                const category = document.getElementById('expense-category').value;
+                const description = document.getElementById('expense-description').value;
+                expenses.push({ amount, category, description });
+                localStorage.setItem('expenses', JSON.stringify(expenses));
+                renderExpenses();
+                expenseForm.reset();
+            });
+
+            expenseList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    expenses.splice(index, 1);
+                    localStorage.setItem('expenses', JSON.stringify(expenses));
+                    renderExpenses();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const expense = expenses[index];
+                    document.getElementById('expense-amount').value = expense.amount;
+                    document.getElementById('expense-category').value = expense.category;
+                    document.getElementById('expense-description').value = expense.description;
+                    expenses.splice(index, 1);
+                    localStorage.setItem('expenses', JSON.stringify(expenses));
+                    renderExpenses();
+                }
+            });
+
+            renderExpenses();
+
+            // Flashcards
+            const flashcardForm = document.getElementById('flashcard-form');
+            const flashcardDisplay = document.getElementById('flashcard-display');
+            const flashcardList = document.getElementById('flashcard-list');
+            let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+            let currentFlashcardIndex = 0;
+
+            function renderFlashcards() {
+                flashcardList.innerHTML = '';
+                flashcards.forEach((flashcard, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>Q: ${flashcard.question}</span>
+                        <div>
+                            <button class="edit-btn" data-index="${index}">Edit</button>
+                            <button class="delete-btn" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    flashcardList.appendChild(li);
+                });
+                displayCurrentFlashcard();
+            }
+
+            function displayCurrentFlashcard() {
+                if (flashcards.length === 0) {
+                    flashcardDisplay.innerHTML = '<p>No flashcards available.</p>';
+                    return;
+                }
+                const flashcard = flashcards[currentFlashcardIndex];
+                flashcardDisplay.innerHTML = `
+                    <div class="flashcard">
+                        <div class="flashcard-front">${flashcard.question}</div>
+                        <div class="flashcard-back">${flashcard.answer}</div>
+                    </div>
+                    <button id="prev-flashcard">Previous</button>
+                    <button id="next-flashcard">Next</button>
+                    <button id="flip-flashcard">Flip</button>
+                `;
+                document.getElementById('prev-flashcard').addEventListener('click', () => {
+                    currentFlashcardIndex = (currentFlashcardIndex - 1 + flashcards.length) % flashcards.length;
+                    displayCurrentFlashcard();
+                });
+                document.getElementById('next-flashcard').addEventListener('click', () => {
+                    currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcards.length;
+                    displayCurrentFlashcard();
+                });
+                document.getElementById('flip-flashcard').addEventListener('click', () => {
+                    const flashcard = document.querySelector('.flashcard');
+                    flashcard.style.transform = flashcard.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+                });
+            }
+
+            flashcardForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const question = document.getElementById('flashcard-question').value;
+                const answer = document.getElementById('flashcard-answer').value;
+                flashcards.push({ question, answer });
+                localStorage.setItem('flashcards', JSON.stringify(flashcards));
+                renderFlashcards();
+                flashcardForm.reset();
+            });
+
+            flashcardList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    flashcards.splice(index, 1);
+                    localStorage.setItem('flashcards', JSON.stringify(flashcards));
+                    renderFlashcards();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const flashcard = flashcards[index];
+                    document.getElementById('flashcard-question').value = flashcard.question;
+                    document.getElementById('flashcard-answer').value = flashcard.answer;
+                    flashcards.splice(index, 1);
+                    localStorage.setItem('flashcards', JSON.stringify(flashcards));
+                    renderFlashcards();
+                }
+            });
+
+            renderFlashcards();
+
+            // Meditation Timer
+            const meditationForm = document.getElementById('meditation-form');
+            const meditationTimer = document.getElementById('meditation-timer');
+            let meditationInterval;
+
+            meditationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const duration = document.getElementById('meditation-duration').value * 60; // Convert to seconds
+                const sound = document.getElementById('meditation-sound').value;
+                startMeditationTimer(duration, sound);
+            });
+
+            function startMeditationTimer(duration, sound) {
+                clearInterval(meditationInterval);
+                let timeLeft = duration;
+
+                meditationInterval = setInterval(() => {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    meditationTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                    if (timeLeft === 0) {
+                        clearInterval(meditationInterval);
+                        playSound(sound);
+                        meditationTimer.textContent = 'Meditation complete!';
+                    }
+                    timeLeft--;
+                }, 1000);
+            }
+
+            function playSound(sound) {
+                // In a real app, you would play the actual sound file here
+                console.log(`Playing ${sound} sound`);
+            }
+
+            // Fitness Challenge
+            const fitnessForm = document.getElementById('fitness-form');
+            const fitnessList = document.getElementById('fitness-list');
+            let fitnessLogs = JSON.parse(localStorage.getItem('fitnessLogs')) || [];
+
+            function renderFitnessLogs() {
+                fitnessList.innerHTML = '';
+                fitnessLogs.forEach((log, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${log.activity} - ${log.duration} minutes ${log.reps ? `(${log.reps} reps)` : ''}</span>
+                        <div>
+                            <button class="edit-btn" data-index="${index}">Edit</button>
+                            <button class="delete-btn" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    fitnessList.appendChild(li);
+                });
+            }
+
+            fitnessForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const activity = document.getElementById('fitness-activity').value;
+                const duration = document.getElementById('fitness-duration').value;
+                const reps = document.getElementById('fitness-reps').value;
+                fitnessLogs.push({ activity, duration, reps });
+                localStorage.setItem('fitnessLogs', JSON.stringify(fitnessLogs));
+                renderFitnessLogs();
+                fitnessForm.reset();
+            });
+
+            fitnessList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    fitnessLogs.splice(index, 1);
+                    localStorage.setItem('fitnessLogs', JSON.stringify(fitnessLogs));
+                    renderFitnessLogs();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const log = fitnessLogs[index];
+                    document.getElementById('fitness-activity').value = log.activity;
+                    document.getElementById('fitness-duration').value = log.duration;
+                    document.getElementById('fitness-reps').value = log.reps;
+                    fitnessLogs.splice(index, 1);
+                    localStorage.setItem('fitnessLogs', JSON.stringify(fitnessLogs));
+                    renderFitnessLogs();
+                }
+            });
+
+            renderFitnessLogs();
+
+            // Personal Journal
+            const journalForm = document.getElementById('journal-form');
+            const journalList = document.getElementById('journal-list');
+            let journalEntries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+
+            function renderJournalEntries() {
+                journalList.innerHTML = '';
+                journalEntries.forEach((entry, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <h3>${new Date(entry.date).toLocaleDateString()}</h3>
+                        <p>${entry.content}</p>
+                        <p><strong>Tags:</strong> ${entry.tags.join(', ')}</p>
+                        <button class="edit-btn" data-index="${index}">Edit</button>
+                        <button class="delete-btn" data-index="${index}">Delete</button>
+                    `;
+                    journalList.appendChild(li);
+                });
+            }
+
+            journalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const content = document.getElementById('journal-entry').value;
+                const tags = document.getElementById('journal-tags').value.split(',').map(tag => tag.trim());
+                journalEntries.push({ content, tags, date: new Date() });
+                localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+                renderJournalEntries();
+                journalForm.reset();
+            });
+
+            journalList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    journalEntries.splice(index, 1);
+                    localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+                    renderJournalEntries();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const entry = journalEntries[index];
+                    document.getElementById('journal-entry').value = entry.content;
+                    document.getElementById('journal-tags').value = entry.tags.join(', ');
+                    journalEntries.splice(index, 1);
+                    localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+                    renderJournalEntries();
+                }
+            });
+
+            renderJournalEntries();
+
+            // Scrapbooking
+            const scrapbookForm = document.getElementById('scrapbook-form');
+            const scrapbookPages = document.getElementById('scrapbook-pages');
+            let scrapbookEntries = JSON.parse(localStorage.getItem('scrapbookEntries')) || [];
+
+            function renderScrapbookPages() {
+                scrapbookPages.innerHTML = '';
+                scrapbookEntries.forEach((entry, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'scrapbook-page';
+                    div.innerHTML = `
+                        <h3>${entry.title}</h3>
+                        <p>${entry.content}</p>
+                        <button class="edit-btn" data-index="${index}">Edit</button>
+                        <button class="delete-btn" data-index="${index}">Delete</button>
+                    `;
+                    scrapbookPages.appendChild(div);
+                });
+            }
+
+            scrapbookForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('scrapbook-title').value;
+                const content = document.getElementById('scrapbook-content').value;
+                scrapbookEntries.push({ title, content });
+                localStorage.setItem('scrapbookEntries', JSON.stringify(scrapbookEntries));
+                renderScrapbookPages();
+                scrapbookForm.reset();
+            });
+
+            scrapbookPages.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    scrapbookEntries.splice(index, 1);
+                    localStorage.setItem('scrapbookEntries', JSON.stringify(scrapbookEntries));
+                    renderScrapbookPages();
+                } else if (e.target.classList.contains('edit-btn')) {
+                    const index = e.target.getAttribute('data-index');
+                    const entry = scrapbookEntries[index];
+                    document.getElementById('scrapbook-title').value = entry.title;
+                    document.getElementById('scrapbook-content').value = entry.content;
+                    scrapbookEntries.splice(index, 1);
+                    localStorage.setItem('scrapbookEntries', JSON.stringify(scrapbookEntries));
+                    renderScrapbookPages();
+                }
+            });
+
+            renderScrapbookPages();
+
+            // Quizzes
+            const startQuizButton = document.getElementById('start-quiz');
+            const quizContainer = document.getElementById('quiz-container');
+            const quizQuestion = document.getElementById('quiz-question');
+            const quizOptions = document.getElementById('quiz-options');
+            const submitAnswerButton = document.getElementById('submit-answer');
+            const quizResults = document.getElementById('quiz-results');
+
+            let currentQuestionIndex = 0;
+            let score = 0;
+
+            const quizQuestions = [
+                {
+                    question: "What is the capital of France?",
+                    options: ["London", "Berlin", "Paris", "Madrid"],
+                    correctAnswer: 2
+                },
+                {
+                    question: "Which planet is known as the Red Planet?",
+                    options: ["Mars", "Venus", "Jupiter", "Saturn"],
+                    correctAnswer: 0
+                },
+                {
+                    question: "What is the largest mammal in the world?",
+                    options: ["African Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+                    correctAnswer: 1
+                }
+            ];
+
+            startQuizButton.addEventListener('click', startQuiz);
+
+            function startQuiz() {
+                currentQuestionIndex = 0;
+                score = 0;
+                quizContainer.style.display = 'block';
+                quizResults.style.display = 'none';
+                displayQuestion();
+            }
+
+            function displayQuestion() {
+                const question = quizQuestions[currentQuestionIndex];
+                quizQuestion.textContent = question.question;
+                quizOptions.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.addEventListener('click', () => selectOption(index));
+                    quizOptions.appendChild(button);
+                });
+            }
+
+            function selectOption(index) {
+                const buttons = quizOptions.getElementsByTagName('button');
+                for (let i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('selected');
+                }
+                buttons[index].classList.add('selected');
+            }
+
+            submitAnswerButton.addEventListener('click', submitAnswer);
+
+            function submitAnswer() {
+                const selectedButton = quizOptions.querySelector('.selected');
+                if (selectedButton) {
+                    const selectedAnswer = Array.from(quizOptions.children).indexOf(selectedButton);
+                    if (selectedAnswer === quizQuestions[currentQuestionIndex].correctAnswer) {
+                        score++;
+                    }
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < quizQuestions.length) {
+                        displayQuestion();
+                    } else {
+                        displayResults();
+                    }
+                } else {
+                    alert('Please select an answer before submitting.');
+                }
+            }
+
+            function displayResults() {
+                quizContainer.style.display = 'none';
+                quizResults.style.display = 'block';
+                quizResults.innerHTML = `
+                    <h3>Quiz Complete!</h3>
+                    <p>Your score: ${score} out of ${quizQuestions.length}</p>
+                    <button id="restart-quiz">Restart Quiz</button>
+                `;
+                document.getElementById('restart-quiz').addEventListener('click', startQuiz);
+            }
+        });
+    </script>
+</body>
+</html>
